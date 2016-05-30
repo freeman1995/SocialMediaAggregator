@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <center><h1>The 5 Recent Posts From Each Page</h1></center>
+    </br>
+    </br>
+    %for page_name, posts in pages_recent_posts.items():
+        <h1>{{page_name}} recent posts </h1>
+        </br>
+        %for post in posts:
+            <li>
+                %if 'message' in post:
+                    {{post['message']}}</br>
+                %end
+                %if 'picture' in post:
+                    <img height="25%" width="25%" src="{{post['picture']}}"></br>
+                %end
+                %if 'link' in post:
+                    <a href="{{post['link']}}"> Source </a></br>
+                %end
+                <b>{{post['created_time']}}</b></br>
+                <b>{{post['likes']}} likes</b></br>
+                <a href="{{post['permalink_url']}}"> View post in Facebook </a></br>
+                </br>
+                </br>
+                </br>
+                </br>
+            </li>
+        %end
+    %end
+</body>
+</html>

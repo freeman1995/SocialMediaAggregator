@@ -18,13 +18,41 @@ class DataAccessManager(metaclass=Singleton):
         self.db = mongo_client.sma_db
         self.page_collection = self.db.page_collection
         self.post_collection = self.db.post_collection
+        self.insta_user_collection = self.db.insta_user_collection
+        self.photo_collection = self.db.photo_collection
         self.page_collection.create_index([('fbid', ASCENDING)], unique=True)
+        self.insta_user_collection.create_index([('insta_id', ASCENDING)], unique=True)
 
     def get_pages_data_access(self):
         return PagesDataAccess(self.page_collection)
 
     def get_posts_data_access(self):
         return PostsDataAccess(self.post_collection)
+
+    def get_insta_users_data_access(self):
+        return InstaUsersDataAccess(self.insta_user_collection)
+
+    def get_photos_data_access(self):
+        return PhotosDataAccess(self.photo_collection)
+
+
+class PhotosDataAccess:
+    def __init__(self, photo_collection):
+        self.photo_collection = photo_collection
+
+
+class InstaUsersDataAccess:
+    def __init__(self, insta_user_collection):
+        self.insta_user_collection = insta_user_collection
+
+    def insert(self, user):
+        try:
+            self.insta_user_collection.insert_one(user)
+        except DuplicateKeyError:
+            raise DuplicateEntityError()
+
+    def find_all(self):
+        return [insta_user for insta_user in self.insta_user_collection.find()]
 
 
 class PostsDataAccess:
@@ -38,15 +66,16 @@ class PostsDataAccess:
         return bulk.execute()
 
     def find_recent_by_page(self, page_fbid, count):
-        return [post for post in self.post_collection.find({'page_fbid': page_fbid}).limit(count)]
+        return [post for post in
+                self.post_collection.find({'page_fbid': page_fbid}).sort('created_time', -1).limit(count)]
 
     def find_best_by_page(self, page_fbid, count):
         return [post for post in self.post_collection.find({'page_fbid': page_fbid}).sort('likes', -1).limit(count)]
 
-    def find_best_by_date(self, post_date):
+    def find_best_by_date(self, post_date, count):
         return [post for post in self.post_collection.find(
             {'created_time': {'$gte': post_date, '$lt': post_date + timedelta(days=1)}}
-        ).sort('likes', -1)]
+        ).sort('likes', -1).limit(count)]
 
     def remove_by_page(self, page_fbid):
         self.post_collection.remove({'page_fbid': page_fbid})
@@ -60,10 +89,16 @@ class PagesDataAccess:
         try:
             self.page_collection.insert_one(page)
         except DuplicateKeyError:
-            raise DuplicatePageError(page)
+            raise DuplicateEntityError(page)
+
+    def update(self, page):
+        self.page_collection.update({'fbid': page['fbid']}, page)
 
     def find_by_id(self, _id):
         return self.page_collection.find_one({'_id': _id})
+
+    def find_by_fbid(self, fbid):
+        return self.page_collection.find_one({'fbid': fbid})
 
     def find_all(self):
         return [page for page in self.page_collection.find()]
@@ -72,6 +107,6 @@ class PagesDataAccess:
         self.page_collection.remove({'fbid': fbid})
 
 
-class DuplicatePageError(Exception):
-    def __init__(self, page):
-        Exception.__init__(self, 'A page with facebook id:{fbid} already exists'.format(**page))
+class DuplicateEntityError(Exception):
+    def __init__(self):
+        Exception.__init__(self, 'This entity already exists')

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script>
+        $(function() {
+            $( "#datepicker" ).datepicker();
+        });
+    </script>
+    <title>Title</title>
+</head>
+<body>
+    <center>
+        <h1>10 Best Posts Of  {{str_date}}</h1>
+        <form action="/best_posts_by_date" method="get">
+            <input name="date" type="text" id="datepicker">
+            <input value="Go!" type="submit" />
+        </form>
+    </center>
+    </br>
+    </br>
+    %for (page_name, post) in best_posts:
+        <h4>{{page_name}}:</h4>
+        <li>
+            %if 'message' in post:
+                {{post['message']}}</br>
+            %end
+            %if 'picture' in post:
+                <img height="25%" width="25%" src="{{post['picture']}}"></br>
+            %end
+            %if 'link' in post:
+                <a href="{{post['link']}}"> Source </a></br>
+            %end
+            <b>{{post['created_time']}}</b></br>
+            <b>{{post['likes']}} likes</b></br>
+            <a href="{{post['permalink_url']}}"> View post in Facebook </a></br>
+            </br>
+            </br>
+            </br>
+            </br>
+        </li>
+    %end
+</body>
+</html>

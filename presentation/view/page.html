@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social Media Aggregator</title>
+</head>
+<body>
+    </br>
+    </br>
+    <img height="15%" width="15%" src="{{page['picture']}}"></br>
+    <h2><b>{{page['name']}}</b></br></h2>
+    <h2><b>About:</b> {{page['about']}}</br></h2>
+    <h2><b>{{page['fan_count']}}</b> fans.</br></h2>
+    <h4><a href="{{page['link']}}"> View page in Facebook </a> &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/page/reload?page_fbid={{page['fbid']}}"> Update page information </a> &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/remove_page/{{page['fbid']}}"> Remove page </a></br></h4>
+    </br>
+    <h2> Posts </h2>
+    </br>
+    %for post in post_list:
+        <li>
+            %if 'message' in post:
+                {{post['message']}}</br>
+            %end
+            %if 'picture' in post:
+                <img height="25%" width="25%" src="{{post['picture']}}"></br>
+            %end
+            %if 'link' in post:
+                <a href="{{post['link']}}"> Source </a></br>
+            %end
+            <b>{{post['created_time']}}</b></br>
+            <b>{{post['likes']}} likes</b></br>
+            <a href="{{post['permalink_url']}}"> View post in Facebook </a></br>
+            </br>
+            </br>
+            </br>
+            </br>
+        </li>
+    %end
+</body>
+</html>

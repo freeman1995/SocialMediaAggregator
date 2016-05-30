@@ -1,1 +1,1 @@
-1050523815021629|7GUijgTsIV-BBxnFeUhpKRn9ZTk
+https://instagram.com/oauth/authorize/?client_id=b9bd0d7b276249339b31aaebb97260ba&amp;redirect_uri=http://localhost&amp;response_type=token&amp;scope=public_content

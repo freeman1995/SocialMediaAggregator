@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social Media Aggregator</title>
+</head>
+<body>
+    <h1>Facebook Pages</h1>
+
+    </br>
+    </br>
+
+    <form action="/add_page" method="post">
+        Page URL or Slug or ID: <input name="page_url" type="text" />
+        <input value="Add!" type="submit" />
+    </form>
+
+    </br>
+    </br>
+    </br>
+
+    %for page in page_list:
+        <li>
+            <img src="{{page['picture']}}"></br>
+            <b>{{page['name']}}</b></br>
+            <b>About:</b> {{page['about']}}</br>
+            <b>{{page['fan_count']}}</b> fans.</br>
+            <a href="{{page['link']}}"> View page in Facebook </a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="/page?page_fbid={{page['fbid']}}"> View more </a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="/remove_page/{{page['fbid']}}"> Remove page </a>
+            </br>
+            </br>
+            </br>
+        </li>
+    %end
+</body>
+</html>
